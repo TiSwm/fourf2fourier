@@ -1,0 +1,3 @@
+conda create -n fourier_workshop
+conda activate fourier_workshop
+conda install rayoptics --channel conda-forge
