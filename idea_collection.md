@@ -15,7 +15,7 @@ Ideas
 * Probleme der Einstellung der Beleuchtung durch blende --> Licht wegwerfen. Alternative Konzepte?
 * Was ist die Menge an information die unser System pro Bild transportieren kann? Durch was wird die rate in einem Lithographie system begrenzt?
 * Chromatische abberation
-*
+* Verbesserung durch eine oder 2 weitere Linsen
 
 Randbedingungen
 * 4 Betreuer
@@ -28,4 +28,4 @@ Aha Erlebnisse / Learnings:
 * 4f abb. Ist telezentrisch --> keine Perspektive, transfer des 2d Bildes
 * Kommunikation von Koordinatensystemen ist schwierig
 * High end Optik ist ein Manufaktur Produkt, keine Massenware
-*
+* Sphärische Oberflächen sind einfach zu fertigen <-> Freiformflächen haben Vorteile
