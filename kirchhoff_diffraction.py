@@ -21,14 +21,14 @@ width_slit = 5 * wl
 dist_slits = 10 * wl
 
 def grid(cd, pitch, n_elements=20, offset=0):
-    width = n_elements * pitch + cd / 2
+    width = n_elements * pitch - 2 * (pitch - cd)
     x0 = width / 2 + offset
     def object_function(x_o):
         transmission = np.zeros_like(x_o, dtype="complex")
         for i in range(n_elements):
             transmission += slit(x_o, -x0 + i * pitch, cd)
         return transmission
-    return object_function, 1.1 * x0
+    return object_function, 1.1 * n_elements * pitch / 2
 
 
 def double_slit(width_slit, dist_slits):
@@ -38,7 +38,7 @@ def double_slit(width_slit, dist_slits):
 
 # object_function = double_slit(width_slit, dist_slits)
 object_function, window = grid(width_slit * 2, dist_slits * 5, n_elements=4)
-object_function, window = grid(cd=5 * wl, pitch=10 * wl, n_elements=4)
+object_function, window = grid(cd=5 * wl, pitch=10 * wl, n_elements=5)
 
 def kirchhoff_integral(z_i, wl, x_o, x_i, r_s, obj_function):
     obj = obj_function(x_o)
