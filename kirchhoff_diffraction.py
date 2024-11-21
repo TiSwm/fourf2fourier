@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from fourier_optics import slit, fft_on_grid
 from tqdm import tqdm
 
-nx = 2000
+nx = 6000
 
 z_s = -100
 z_i = +0.004
@@ -38,7 +38,8 @@ def double_slit(width_slit, dist_slits):
 
 # object_function = double_slit(width_slit, dist_slits)
 object_function, window = grid(width_slit * 2, dist_slits * 5, n_elements=4)
-object_function, window = grid(cd=5 * wl, pitch=10 * wl, n_elements=5)
+object_function, window = grid(cd=5 * wl, pitch=10 * wl, n_elements=2)
+# object_function, window = grid(cd=50 * wl, pitch=100 * wl, n_elements=2)
 
 def kirchhoff_integral(z_i, wl, x_o, x_i, r_s, obj_function):
     obj = obj_function(x_o)
@@ -58,19 +59,35 @@ def kirchhoff_integral(z_i, wl, x_o, x_i, r_s, obj_function):
         img[idx] = np.square(np.abs(E_img))
     return img
 
-def plot_single_integral():
+def plot_nearfield():
     x_o = np.linspace(-w_o / 2, w_o / 2, nx * 20)
     x_i = np.linspace(-w_o / 2, w_o / 2, 2000)
-    img = kirchhoff_integral(z_i=2 * wl, wl=wl, x_o=x_o, x_i=x_i, r_s=r_s, obj_function=object_function)
+    z_nf = 2 * wl
+    img = kirchhoff_integral(z_i=z_nf, wl=wl, x_o=x_o, x_i=x_i, r_s=r_s, obj_function=object_function)
 
     fig, ax = plt.subplots(2)
     ax[0].plot(x_o, object_function(x_o))
     ax[0].set_xlim(-window, window)
-    ax[1].plot(x_i, img)
+    ax[1].plot(x_i, img * np.square(z_s + z_nf))
     ax[1].set_xlim(-window, window)
     plt.show()
 
-plot_single_integral()
+
+def plot_farfield():
+    x_o = np.linspace(-w_o / 2, w_o / 2, nx * 20)
+    z_ff = 50 * w_o / wl
+    x_i = np.linspace(-w_o / 2, w_o / 2, 2000) * z_ff
+    print(z_ff)
+    img = kirchhoff_integral(z_i=z_ff, wl=wl, x_o=x_o, x_i=x_i, r_s=r_s, obj_function=object_function)
+
+    fig, ax = plt.subplots(2)
+    ax[0].plot(x_o, object_function(x_o))
+    ax[0].set_xlim(-window, window)
+    ax[1].plot(x_i, img * np.square(z_s + z_ff))
+    plt.show()
+
+plot_nearfield()
+plot_farfield()
 
 # aerial image
 aerial = []
@@ -82,14 +99,13 @@ aerial = np.array(aerial)
 fig, ax = plt.subplots()
 ax.imshow(aerial.T * np.tile(z_cuts, (aerial.shape[1], 1)), extent=(np.min(z_cuts), np.max(z_cuts), np.min(x_i), np.max(x_i)))
 plt.show()
-fig, ax = plt.subplots(4)
+fig, ax = plt.subplots(1, 5)
 # ax[0].imshow(np.log(aerial).T, extent=(np.min(z_cuts), np.max(z_cuts), np.min(x_i), np.max(x_i)))
-ax[0].plot(x_i, aerial[0] * z_cuts[0])
-ax[1].plot(x_i, aerial[4] * z_cuts[4])
-ax[2].plot(x_i, aerial[10] * z_cuts[10])
-ax[3].plot(x_i, aerial[30] * z_cuts[30])
+for ax_idx, z_idx in enumerate([0, 2, 4, 10, -1]):
+    ax[ax_idx].plot(aerial[z_idx] * z_cuts[z_idx], x_i)
+    ax[ax_idx].set_title(r"z / $\lambda=$" + f"{np.around(z_cuts[z_idx] / wl, 2)}")
+plt.tight_layout()
 plt.show()
-
 
 z = 1e3
 x_i = z * np.linspace(-w_i / 2, w_i / 2, nx * 10)
