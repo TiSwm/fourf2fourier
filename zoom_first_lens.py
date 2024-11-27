@@ -1,38 +1,8 @@
-from rayoptics.environment import *
+import numpy as np
+import matplotlib.pyplot as plt
 
-def get_model(shift_obj=0, shift_tube=0, NA=0.04):
-    opm = OpticalModel()
-    sm = opm['seq_model']
-    osp = opm['optical_spec']
-
-    beta = 5
-    r_max_sensor = 3.1
-
-    osp['pupil'] = PupilSpec(osp, key=['object', 'NA'], value=NA)
-    osp['fov'] = FieldSpec(osp, key=['object', 'height'], value=0.6, flds=[0., 0.1 / beta, 1. / beta, r_max_sensor / beta], is_relative=True)
-    osp['wvls'] = WvlSpec([(550.0, 1.0)], ref_wl=0)
-    opm.radius_mode = True
-
-    # sm.gaps[0].thi=28.17 + shift_obj
-    # sm.add_surface([+20.89, 12.0, 'N-BAF10', 'Schott'])
-    # sm.add_surface([-16.73, 2.00, 'N-SF6HT', 'Schott'])
-    # sm.add_surface([-79.8, 22.9])
-
-    sm.gaps[0].thi=21.175 + shift_obj
-    sm.add_surface([+79.8, 2.00, 'N-SF6HT', 'Schott'])
-    sm.add_surface([+16.73, 12.00, 'N-BAF10', 'Schott'])
-    sm.add_surface([-20.89, 22.9, ])
-
-    sm.set_stop()
-
-    sm.add_surface([np.inf, 150.0 - shift_obj + shift_tube])
-    sm.add_surface([+91.62, 5.7, 'N-BK7', 'Schott'])
-    sm.add_surface([-66.68, 2.2, 'SF5', 'Schott'])
-    sm.add_surface([-197.7, 172.071 - shift_tube])
-
-    opm.update_model()
-
-    return sm
+from rayoptics.environment import trace
+from projection_optics import get_rayoptics_model as get_pob
 
 
 def calc_contrast(sm, pitch, x0=0, na=0.04):
@@ -67,7 +37,7 @@ contrast_at_50um = np.zeros_like(shifts)
 
 fig, ax = plt.subplots()
 for i, shift in enumerate(shifts):
-    sm = get_model(shift)
+    sm = get_pob(shift)
     contrast_at_50um[i] = calc_contrast(sm, 1e-3)
     if i % 6 == 0:
         ax.plot(*mtf_guess(sm), label=f"shift 1st Lens: {np.around(shift * 1e3, 1)}um")
@@ -89,7 +59,7 @@ contrast_at_50um = np.zeros_like(shifts)
 
 fig, ax = plt.subplots()
 for i, shift in enumerate(shifts):
-    sm = get_model(0., shift)
+    sm = get_pob(0., shift)
     contrast_at_50um[i] = calc_contrast(sm, 1e-3)
     if i % 6 == 0:
         ax.plot(*mtf_guess(sm), label=f"shift 2nd Lens: {np.around(shift, 1)}mm")
