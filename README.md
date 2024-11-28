@@ -26,3 +26,11 @@ You can also simply try installing with pip. Your milage may vary.
 pip install numpy=1
 pip install rayoptics
 ```
+
+## First tests
+You can simply run
+```
+conda activate fourier
+python calc_and_plot_single_ray.py
+```
+and you should get a plot of a single raytrace through the system.

@@ -29,4 +29,7 @@ for i, ray in enumerate(raytrace_data.ray):
 fig, ax = plt.subplots()
 ax.plot(z_for_drawing + r_of_z[:,2], r_of_z[:,0])
 # ax.set_aspect("equal")
+ax.set_xlabel("z / mm")
+ax.set_ylabel("x / mm")
+ax.set_title("Raytrace of a single ray through the 4f system")
 plt.show()
