@@ -1,5 +1,6 @@
 # 4f Experiment
-This project is a digital Twin for the Thorlabs Fourier Optics Kit.
+This project is a digital Twin for the Thorlabs Fourier Optics Kit. It centers around the open source raytracer
+https://ray-optics.readthedocs.io/en/latest/Introduction.html
 
 ## Installation
 Install Anaconda and create a new environment with:
