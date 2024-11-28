@@ -4,9 +4,12 @@ This project is a digital Twin for the Thorlabs Fourier Optics Kit.
 ## Installation
 Install Anaconda and create a new environment with:
 ```
-conda create --name fourier_workshop --file conda_env/spec_sheet.txt
+conda create --name fourier --file conda_env/spec_sheet.txt
+conda activate fourier
 ```
-which was created via
+
+
+This spec sheet was was created via
 ```
 conda list --explicit > conda_env/spec_sheet.txt
 ```
