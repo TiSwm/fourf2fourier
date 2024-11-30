@@ -40,4 +40,4 @@ What is the resolution limit of our setup?
 * can we do something with the illumination? --> Monopole what are the disadvantages?
 * how would you go about making the adjustment a stable process that doesn't rely on optics knowledge?
 * how do does the problem change when considering mirrors?
-* the theory group shoudl
+* the theory group should also touch the experiment

@@ -33,19 +33,20 @@ def calc_image(x, pupil, obj, na):
         filter = filter_for_k_larger_cut(k, cut=na)
         cut_x, img = fft_on_grid(k, filter * fft, inverse=True)
         image += np.square(np.abs(img))
-    return cut_x, image
+    return cut_x, image / 4
 
 if __name__ == "__main__":
-    wl = 550e-6 / .5 # mm
-    x = np.linspace(-0.1, 0.1, 2000) / wl
+    wl = 550e-6 # mm
+    x = np.linspace(-0.5, 0.5, int(2e5)) / wl
     w = 5 * wl
     d = 10 * wl
     single_slit = slit(x * wl, 0, w)
     double_slit = slit(x * wl, -d, w) + slit(x * wl, +d, w)
     pupil = [0.000001, -0.000001, 0.0000005, -0.0000005]
+    # pupil = [0.0]
 
     obj = double_slit
-    na = 0.03
+    na = 0.02
 
     cut_x, img = calc_image(x, pupil, obj, na)
 
@@ -53,25 +54,29 @@ if __name__ == "__main__":
     filter = filter_for_k_larger_cut(k, cut=na)
 
     fig, ax = plt.subplots(2)
-    ax[0].plot(x, np.square(np.abs(obj)))
-    ax[0].plot(cut_x, img)
+    ax[0].set_title("Real space")
+    ax[0].plot(x, np.square(np.abs(obj)), label="mask")
+    ax[0].plot(cut_x, img, "--", label="wafer")
     ax[0].set_xlabel(r"x / $\lambda$")
-    ax[1].plot(k, np.square(np.abs(fft)))
-    ax[1].plot(k, np.square(np.abs(fft * filter)))
+    ax[0].set_xlim(-40, 40)
+    ax[0].set_title("Diffraction pattern")
+    ax[1].plot(k, np.square(np.abs(fft)), label="mask")
+    ax[1].plot(k, np.square(np.abs(fft * filter)), "--", label="wafer")
     ax[1].set_xlim(-0.5, 0.5)
-    # ax[1].set_xlabel(r"k $\lambda$")
+    ax[1].set_xlabel(r"k $\lambda$")
+    plt.tight_layout()
     plt.show()
 
-    pupil = [-0.00004, 0.00004, -0.000041, 0.000041]
-    cut_x, img = calc_image(x, pupil, obj, na)
+    # pupil = [-0.00004, 0.00004, -0.000041, 0.000041]
+    # cut_x, img = calc_image(x, pupil, obj, na)
 
-    k, fft = fft_on_grid(x, obj * illumination(x, 0.00004))
-    fig, ax = plt.subplots(2)
-    ax[0].plot(x, np.square(np.abs(obj)))
-    ax[0].plot(cut_x, img)
-    ax[0].set_xlabel(r"x / $\lambda$")
-    ax[1].plot(k, np.square(np.abs(fft)))
-    ax[1].plot(k, np.square(np.abs(fft * filter)))
-    ax[1].set_xlim(-0.5, 0.5)
-    # ax[1].set_xlabel(r"k $\lambda$")
-    plt.show()
+    # k, fft = fft_on_grid(x, obj * illumination(x, 0.00004))
+    # fig, ax = plt.subplots(2)
+    # ax[0].plot(x, np.square(np.abs(obj)))
+    # ax[0].plot(cut_x, img / np.max(img))
+    # ax[0].set_xlabel(r"x / $\lambda$")
+    # ax[1].plot(k, np.square(np.abs(fft)))
+    # ax[1].plot(k, np.square(np.abs(fft * filter)))
+    # ax[1].set_xlim(-0.5, 0.5)
+    # # ax[1].set_xlabel(r"k $\lambda$")
+    # plt.show()

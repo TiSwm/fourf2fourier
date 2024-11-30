@@ -35,4 +35,8 @@ for ray_idx in range(n_rays):
 fig, ax = plt.subplots()
 for ray in range(n_rays):
     ax.plot(z_for_drawing + r_of_z[ray,:,2], r_of_z[ray,:,0])
+
+ax.set_xlabel("z / mm")
+ax.set_ylabel("x / mm")
+ax.set_title("Raytrace of a bundle of rays in the 4f system")
 plt.show()
