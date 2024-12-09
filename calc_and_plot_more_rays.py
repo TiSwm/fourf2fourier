@@ -9,13 +9,14 @@ pob_model = get_pob()
 dists = np.array([0., 28.17, 12., 2., 22.0, 150., 5.7, 2.2, 172.071])
 z_for_drawing = np.cumsum(dists)
 
-object_points = np.zeros((10, 3))
-object_dirs = np.zeros((10, 3))
+object_points = np.zeros((4, 3))
+object_dirs = np.zeros((4, 3))
 object_dirs[:,2] = 1.
-# # pupil raytrace
-# object_dirs[:,0] = np.linspace(0., 0.1, 10)
+# pupil raytrace
+# object_dirs[:,0] = np.linspace(-0.1, 0.1, 10)
 # field raytrace
-object_points[:,0] = np.linspace(0., 0.1, 10)
+object_points[:,0] = np.tile(np.linspace(0., .5, 2), 2)
+object_dirs[:,0] = np.repeat(np.linspace(-0.02, 0.02, 2), 2)
 
 wavelength_nm = 550
 n_rays = len(object_points)
